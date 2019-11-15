@@ -11,6 +11,10 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import com.pjatk.brunolemanski.shoplist.R;
 
+
+/**
+ * Created by brunonlemanski on 28/10/2019.
+ */
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
 
     //------------------------------------------------------ Variables
@@ -75,7 +79,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     /**
      * Item interface.
-     * ->> IMPORTANT
+     * -> IMPORTANT
      */
     public interface OnItemClickListener {
         void setDone(RecyclerView.ViewHolder viewHolder, int position);

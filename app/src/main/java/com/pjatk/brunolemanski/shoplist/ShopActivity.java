@@ -22,6 +22,10 @@ import com.pjatk.brunolemanski.shoplist.database.ItemDbHelper;
 import static com.pjatk.brunolemanski.shoplist.OptionActivity.*;
 
 
+/**
+ * Created by brunonlemanski on 28/10/2019.
+ * Class responsible for operation in ShopActivity view.
+ */
 public class ShopActivity extends AppCompatActivity implements DialogForm.IDialogFormListener {
 
     //UI elements
