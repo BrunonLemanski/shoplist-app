@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Text Views -->
+    <string name="app_name">ShopList</string>
+    <string name="shop_list_app">Shop List App</string>
+    <string name="descriptionApp">Thanks to this application you can easily organise your shopping list.</string>
+    <string name="lista_zakup_w">Shopping list</string>
+    <string name="opcje">Options</string>
+    <string name="options">Options</string>
+    <string name="language">Language</string>
+    <string name="shopping_list">Shopping List</string>
+    <string name="manage_your_daily_purchases">Manage your daily purchases.</string>
+    <string name="endpage">No More Does</string>
+
+    <!-- Colors variables -->
+    <color name="background">#282838</color>
+    <color name="secondBackground">#ecedf1</color>
+    <color name="textColor">#e1e0e8</color>
+    <color name="buttonColor">#f7444e</color>
+    <color name="smallTextColor">#6e6f7e</color>
+    <color name="optionButtonColor">#1a1824</color>
+    <color name="textColorDark">#000000</color>
+    <color name="backgroundList">#f4f4f4</color>
+    <color name="red">#fc0303</color>
+</resources>

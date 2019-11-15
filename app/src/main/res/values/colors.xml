@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#282838</color>
+    <color name="colorPrimaryDark">#282838</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- Switch Colors -->
+    <color name="disable_foreground_grey">#42221f1f</color>
+    <color name="disable_thumb_grey">#1c000000</color>
+    <color name="enable_thumb_green">#f7444e</color>
+    <color name="endpageColor">#9a9a9a</color>
+    <color name="itemBg">#ffff</color>
+    <color name="descItemColor">#adadad</color>
+</resources>
