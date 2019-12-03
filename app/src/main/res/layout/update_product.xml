@@ -22,7 +22,7 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/priceEdit" android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/quanityEdity" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/quanityEdit" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintHorizontal_bias="0.503" android:hint="Price"/>
     <EditText
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/quanityEdity"
+            android:id="@+id/quanityEdit"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintHorizontal_bias="0.503" android:layout_marginBottom="20dp"
@@ -50,6 +50,7 @@
             android:layout_width="210dp"
             android:layout_height="wrap_content"
             android:id="@+id/button"
+            android:onClick="saveEdit"
             android:layout_marginBottom="164dp" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>

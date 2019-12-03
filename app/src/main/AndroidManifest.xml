@@ -40,6 +40,13 @@
             </intent-filter>
         </activity>
 
+
+        <receiver android:name=".IdReceive">
+            <intent-filter>
+                <action android:name="com.pjatk.brunolemanski.NEW_PRODUCT"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
