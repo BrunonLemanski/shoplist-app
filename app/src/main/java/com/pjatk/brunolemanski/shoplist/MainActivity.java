@@ -1,6 +1,7 @@
 package com.pjatk.brunolemanski.shoplist;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
     //SharedPreferences config
     private SharedPreferences preferences;
 
+    //BroadcastReceiver
+    private IdReceive receiver = new IdReceive();
+    private IntentFilter filter = new IntentFilter("com.pjatk.brunolemanski.NEW_PRODUCT");
+
     //Variables
     private int setBgOn = R.color.secondBackground;
     private String textColorDark = "#000000";
@@ -39,8 +44,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
+
+    /*
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(receiver);
+    }*/
 
 
 
