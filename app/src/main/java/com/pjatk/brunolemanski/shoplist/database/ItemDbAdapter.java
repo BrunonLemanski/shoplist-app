@@ -10,6 +10,9 @@ import android.provider.BaseColumns;
  */
 public class ItemDbAdapter {
 
+    //public static final String AUTHORITY = "com.pjatk.brunolemanski.shoplist";
+    //public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
+
     /**
      * Constructor - must be empty.
      */
@@ -23,6 +26,7 @@ public class ItemDbAdapter {
         /**
          * Fields in database
          */
+        //public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, "items");
         public static final String TABLE_NAME = "itemList";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_PRICE = "price";

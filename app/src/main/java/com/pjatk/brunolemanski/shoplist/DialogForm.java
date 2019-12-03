@@ -15,6 +15,7 @@ import android.widget.Button;
  */
 public class DialogForm extends AppCompatDialogFragment {
 
+    //UI elements
     private TextInputLayout eTNameProduct;
     private TextInputLayout eTPrice;
     private TextInputLayout eTQuanity;

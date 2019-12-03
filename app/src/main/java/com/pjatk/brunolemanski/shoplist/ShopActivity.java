@@ -1,7 +1,6 @@
 package com.pjatk.brunolemanski.shoplist;
 
-import android.content.ContentValues;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -12,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +45,9 @@ public class ShopActivity extends AppCompatActivity implements DialogForm.IDialo
     private String titleShopEn = "Shopping List";
     private String txDescShopEn = "Manage your daily purchases.";
 
+
+    //BroadcastReceiver
+    private final static String ACTION_MSG = "com.pjatk.brunolemanski.NEW_PRODUCT"; //myIntent
 
 
     /**
@@ -105,6 +108,7 @@ public class ShopActivity extends AppCompatActivity implements DialogForm.IDialo
                 openDialog();
             }
         });
+
     }
 
 
@@ -151,14 +155,32 @@ public class ShopActivity extends AppCompatActivity implements DialogForm.IDialo
         //3. Step
         //Build ContentValues with data from form to database. ->> IMPORTANT
         ContentValues cv = new ContentValues();
+
+        //Uri uri = contentResolver.insert(ItemDbAdapter.AUTHORITY_URI, cv);
+        //long itemId = ContentUris.parseId(uri);
+
+        //cv.put(ItemDbAdapter.ItemDbEntry._ID, itemId);
         cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_TITLE, nameOfProduct);
         cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_PRICE, price);
         cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_QUANTITY, quantity);
         cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_DONE, 0);
 
+
+
         //Inserting CV data to database.
         database.insert(ItemDbAdapter.ItemDbEntry.TABLE_NAME, null, cv);
         itemAdapter.swapCursor(getAllItems());
+
+        //Getting ID's product which is already added.
+        String id = "";
+        Cursor cursor = database.rawQuery("SELECT * from SQLITE_SEQUENCE", null);
+        if(cursor.moveToFirst()) {
+            id = cursor.getString(cursor.getColumnIndex("seq"));
+        }
+        cursor.close();
+
+        Log.i("---------id: ", id);
+        sendMessage(id);
     }
 
 
@@ -227,6 +249,85 @@ public class ShopActivity extends AppCompatActivity implements DialogForm.IDialo
 
         database.update(ItemDbAdapter.ItemDbEntry.TABLE_NAME, cv, where, null);
     }
+
+
+    /**
+     * BroadcastReceiver sending message
+     * @param id
+     */
+    private void sendMessage(String id) {
+        //Sending info to BroadcastReceiver to another app can get receive.
+        Intent intent = new Intent(ACTION_MSG);
+
+        intent.setAction(ACTION_MSG);
+        intent.putExtra("com.pjatk.brunolemanski.NEW_PRODUCT.ID", id); //sending values via broadcast
+
+        sendBroadcast(intent);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+    public void sendOnChannel1(String product, String price, String quantity, String total) {
+
+        Context context = getApplicationContext();
+        PackageManager pm = context.getPackageManager();
+        Intent LaunchIntent = null;
+        //String apppack = intentEditApp; "com.pjatk.brunolemanski.EditApp"
+        String name = "";
+
+        //Launch EditApp via notification
+        try{
+            if(pm != null) {
+                ApplicationInfo app = context.getPackageManager().getApplicationInfo(intentEditApp, 0); //"com.pjatk.brunolemanski.EditApp"
+                name = (String) pm.getApplicationLabel(app); //getting app name from system
+                LaunchIntent = pm.getLaunchIntentForPackage(intentEditApp); //
+            }
+            Toast.makeText(context, "Znaleziono: " + name , Toast.LENGTH_LONG).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        //---------------------------------------- to ma byc w drugiej appce | APP2
+
+        Intent intentApp2 = new Intent();
+        intentApp2.setComponent(new ComponentName("com.pjatk.brunolemanski.editapp", "com.pjatk.brunolemanski.editapp.NEW_PRODUCT"));
+        intentApp2.putExtra("com.pjatk.brunolemanski.EditApp.PRODUCT_NAME", product);
+        intentApp2.putExtra("com.pjatk.brunolemanski.EditApp.PRICE", price);
+        intentApp2.putExtra("com.pjatk.brunolemanski.EditApp.QUANTITY", quantity);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intentApp2, 0);
+
+        //Create notification
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_check_box_black_24dp)
+                .setContentTitle(CHANNEL_1_NAME)
+                .setContentText(product.substring(0,1).toUpperCase() + product.toLowerCase().substring(1) + " product has been added to the base.")
+                .setStyle(new NotificationCompat.InboxStyle()
+                    .addLine("Product: " + product)
+                    .addLine("Price: " + price + " zł")
+                    .addLine("Quantity: " + quantity + " szt")
+                    .addLine("TOTAL: " + total + " zł")
+                    .setBigContentTitle("New product"))
+                .setContentIntent(pendingIntent) //Redirect to define localization in PendingIntent
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notification.flags = Notification.FLAG_AUTO_CANCEL;
+        notificationManagerCompat.notify(1, notification);
+
+        sendBroadcast(intentApp2);
+
+        //---------------------------------------- ---------------------------------
+    }*/
 }
-
-
