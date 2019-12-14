@@ -5,13 +5,13 @@ package com.pjatk.brunolemanski.shoplist.database;
  */
 public class ItemModel {
 
-    private long id;
+    private String id;
     private String title;
     private String price;
     private String quantity;
     private boolean done;
 
-    public ItemModel(long id, String title, String price, String quantity, boolean done) {
+    public ItemModel(String id, String title, String price, String quantity, boolean done) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -19,11 +19,14 @@ public class ItemModel {
         this.done = done;
     }
 
-    public long getId() {
-        return id;
+    public ItemModel() {
     }
 
-    public void setId(long id) {
+    public String getId() {
+        return id;
+    } //long error
+
+    public void setId(String id) {
         this.id = id;
     }
 

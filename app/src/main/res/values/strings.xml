@@ -11,6 +11,7 @@
     <string name="shopping_list">Shopping List</string>
     <string name="manage_your_daily_purchases">Manage your daily purchases.</string>
     <string name="endpage">No More Does</string>
+    <string name="new_item">New item</string>
 
     <!-- Colors variables -->
     <color name="background">#282838</color>

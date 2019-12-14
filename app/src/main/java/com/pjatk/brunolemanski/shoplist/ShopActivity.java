@@ -1,23 +1,33 @@
 package com.pjatk.brunolemanski.shoplist;
 
-import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.annotation.NonNull;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.pjatk.brunolemanski.shoplist.database.ItemAdapter;
-import com.pjatk.brunolemanski.shoplist.database.ItemDbAdapter;
-import com.pjatk.brunolemanski.shoplist.database.ItemDbHelper;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.pjatk.brunolemanski.shoplist.database.FirebaseAdapter;
+import com.pjatk.brunolemanski.shoplist.database.ItemModel;
+
+import java.util.ArrayList;
 
 import static com.pjatk.brunolemanski.shoplist.OptionActivity.*;
 
@@ -25,26 +35,34 @@ import static com.pjatk.brunolemanski.shoplist.OptionActivity.*;
 /**
  * Created by brunonlemanski on 28/10/2019.
  * Class responsible for operation in ShopActivity view.
+ *
+ * Added connection with Firebase® on 11/12/2019.
  */
-public class ShopActivity extends AppCompatActivity implements DialogForm.IDialogFormListener {
+public class ShopActivity extends AppCompatActivity{
 
     //UI elements
     private FloatingActionButton addButton;
-    private ItemAdapter itemAdapter;
     private LinearLayout layoutBackground;
     private TextView title;
     private TextView description;
+    private View view;
 
-    //SharedPreferences and db config
-    private SQLiteDatabase database;
+    //SharedPreferences config
     private SharedPreferences preferences;
+
+    //Firebase configuration
+    private DatabaseReference reference;
+    private static String DB_NAME_FIREBASE = "ShopList";
+    private FirebaseAdapter firebaseAdapter;
+    private FirebaseAdapter deleteAdapter;
+    private FirebaseAuth mAuth;
+    private ArrayList<ItemModel> list;
 
     //Variables
     private String setBgOn = "#ecedf1";
     private String textColorDark = "#000000";
     private String titleShopEn = "Shopping List";
     private String txDescShopEn = "Manage your daily purchases.";
-
 
 
     /**
@@ -56,20 +74,43 @@ public class ShopActivity extends AppCompatActivity implements DialogForm.IDialo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shop_activity);
 
-        //Connecting db to activity ->>  IMPORTANT
-        ItemDbHelper dbHelper = new ItemDbHelper(this);
-        database = dbHelper.getWritableDatabase(); //We want to write data in database.
-
-        //RecyclerView implement
+        //Getting data from Firebase®
         final RecyclerView recyclerView = findViewById(R.id.rVItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        itemAdapter = new ItemAdapter(this, getAllItems());
-        recyclerView.setAdapter(itemAdapter);
+        list = new ArrayList<ItemModel>();
+        mAuth = FirebaseAuth.getInstance();
 
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(ShopActivity.this, "Authentication failed", Toast.LENGTH_LONG).show();
+        }
+        else {
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            reference = FirebaseDatabase.getInstance().getReference().child("users/" + uid).child(DB_NAME_FIREBASE);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    //Retrive data and put in RecyclerView.
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        ItemModel itemModel = dataSnapshot1.getValue(ItemModel.class);
+                        list.add(itemModel);
+                    }
+                    firebaseAdapter = new FirebaseAdapter(ShopActivity.this, list);
+                    recyclerView.setAdapter(firebaseAdapter);
+                    firebaseAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getApplicationContext(), "No Data", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
         //Swipe to delete item from RecyclerView and database.
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT) {
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
@@ -77,25 +118,43 @@ public class ShopActivity extends AppCompatActivity implements DialogForm.IDialo
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
-                removeItem((long) viewHolder.itemView.getTag());
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+
+                if(direction == ItemTouchHelper.LEFT) {
+                    reference.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                            list.remove(dataSnapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    Intent intent = new Intent(ShopActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+
             }
         }).attachToRecyclerView(recyclerView);
-
-
-        //Checkbox listener.
-        itemAdapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
-            @Override
-            public void setDone(RecyclerView.ViewHolder viewHolder, int position) {
-                changeStatus((long) viewHolder.itemView.getTag());
-            }
-
-            @Override
-            public void setUnready(RecyclerView.ViewHolder viewHolder, int position) {
-                changeStatusToUnready((long) viewHolder.itemView.getTag());
-            }
-        });
-
 
         //Add Button listener.
         addButton = findViewById(R.id.addButton); //add functionality by ID
@@ -106,7 +165,6 @@ public class ShopActivity extends AppCompatActivity implements DialogForm.IDialo
             }
         });
     }
-
 
 
     /**
@@ -128,104 +186,12 @@ public class ShopActivity extends AppCompatActivity implements DialogForm.IDialo
     }
 
 
-
     /**
      * Opening dialog window with form.
      */
     private void openDialog(){
-        DialogForm dialogForm = new DialogForm();
-        dialogForm.show(getSupportFragmentManager(), "Dialog Form");
-    }
-
-
-
-    /**
-     *
-     * @param nameOfProduct
-     * @param price
-     * @param quantity
-     */
-    @Override
-    public void applyTexts(String nameOfProduct, String price, String quantity) {
-
-        //3. Step
-        //Build ContentValues with data from form to database. ->> IMPORTANT
-        ContentValues cv = new ContentValues();
-        cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_TITLE, nameOfProduct);
-        cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_PRICE, price);
-        cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_QUANTITY, quantity);
-        cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_DONE, 0);
-
-        //Inserting CV data to database.
-        database.insert(ItemDbAdapter.ItemDbEntry.TABLE_NAME, null, cv);
-        itemAdapter.swapCursor(getAllItems());
-    }
-
-
-
-    /**
-     * Getting all items form db.
-     * @return
-     */
-    private Cursor getAllItems() {
-        return database.query(
-                ItemDbAdapter.ItemDbEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                ItemDbAdapter.ItemDbEntry.COLUMN_TIMESTAMP + " DESC"
-        );
-    }
-
-
-
-    /**
-     * Removing item from Recycler View and database.
-     * @param tag Id of item.
-     */
-    private void removeItem(long tag) {
-        database.delete(
-                ItemDbAdapter.ItemDbEntry.TABLE_NAME,
-                ItemDbAdapter.ItemDbEntry._ID + "=" + tag, null);
-    }
-
-
-
-    /**
-     * Method which changing status to "done" = 1 on line in db.
-     * @param tag
-     */
-    private void changeStatus(long tag) {
-        String where = ItemDbAdapter.ItemDbEntry._ID + "=" + tag;
-
-        ContentValues cv = new ContentValues();
-        //cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_TITLE, ItemDbAdapter.ItemDbEntry.COLUMN_TITLE);
-        //cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_PRICE, ItemDbAdapter.ItemDbEntry.COLUMN_PRICE);
-        //cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_QUANTITY, ItemDbAdapter.ItemDbEntry.COLUMN_QUANTITY);
-        cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_DONE, 1);
-
-        database.update(ItemDbAdapter.ItemDbEntry.TABLE_NAME, cv, where, null);
-        itemAdapter.swapCursor(getAllItems());
-    }
-
-
-
-    /**
-     * Method which changing status to "unready" = 0 on line in db.
-     * @param tag
-     */
-    private void changeStatusToUnready(long tag) {
-        String where = ItemDbAdapter.ItemDbEntry._ID + "=" + tag;
-
-        ContentValues cv = new ContentValues();
-        //cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_TITLE, ItemDbAdapter.ItemDbEntry.COLUMN_TITLE);
-        //cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_PRICE, ItemDbAdapter.ItemDbEntry.COLUMN_PRICE);
-        //cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_QUANTITY, ItemDbAdapter.ItemDbEntry.COLUMN_QUANTITY);
-        cv.put(ItemDbAdapter.ItemDbEntry.COLUMN_DONE, 0);
-
-        database.update(ItemDbAdapter.ItemDbEntry.TABLE_NAME, cv, where, null);
+        Intent intent = new Intent(ShopActivity.this, AddForm.class);
+        startActivity(intent);
     }
 }
 

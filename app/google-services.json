@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "355884240345",
+    "firebase_url": "https://shoplist-database.firebaseio.com",
+    "project_id": "shoplist-database",
+    "storage_bucket": "shoplist-database.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355884240345:android:12ea32a10003a138b4ddc8",
+        "android_client_info": {
+          "package_name": "com.pjatk.brunolemanski.shoplist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "355884240345-auou359uj905cvi0itv2do53t4d475bh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pjatk.brunolemanski.shoplist",
+            "certificate_hash": "bd32b17d9c77a9c36cbfa5f24b18f0c5052d0d97"
+          }
+        },
+        {
+          "client_id": "355884240345-5viihehota27l7mpqo5398f7me9f5cjg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZ5IWNeZEj808xWBU24x0VHrH_JNWKbtw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "355884240345-5viihehota27l7mpqo5398f7me9f5cjg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

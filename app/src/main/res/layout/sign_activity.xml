@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_activity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="25dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_marginTop="90dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            app:srcCompat="@drawable/logo" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/loginTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/sinkinsans400regular"
+        android:gravity="center"
+        android:text="@string/shop_list_app"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="26dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/sinkinsans400regular"
+        android:gravity="center"
+        android:text="Sign Up"
+        android:textColor="@color/smallTextColor"
+        android:textSize="20dp" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/userInputSign"
+        android:layout_width="match_parent"
+        app:errorEnabled="true"
+        android:layout_marginTop="20dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="25"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passInputSign"
+        android:layout_width="match_parent"
+        app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="25"
+        app:passwordToggleEnabled="true"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/confirmInputSign"
+        android:layout_width="match_parent"
+        app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="25"
+        app:passwordToggleEnabled="true"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:hint="Confirm password"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="260dp"
+            android:layout_height="37dp"
+            android:id="@+id/signupButton"
+            android:textAlignment="center"
+            android:background="@drawable/custom_button"
+            android:text="Sign Up"
+            android:textColor="@color/textColor"
+            android:fontFamily="@font/sinkinsans500medium"
+            android:textSize="12dp"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+
+    <TextView
+        android:text="You already have an account? LOG IN"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:onClick="logIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -3,11 +3,12 @@ package com.pjatk.brunolemanski.shoplist;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 
 import static com.pjatk.brunolemanski.shoplist.OptionActivity.*;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private String textDesc = "Dzięki tej aplikacji z łatwością zorganizujesz swoją listę zakupów.";
     private String btnShopEn = "Shopping List";
     private String btnOptionEn = "Options";
+
 
 
     /**
@@ -63,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         shopList.setText(preferences.getString(btnShop, btnShopEn));
         option.setText(preferences.getString(btnOpt, btnOptionEn));
     }
-
 
 
     /**
